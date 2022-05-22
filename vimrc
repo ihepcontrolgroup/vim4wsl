@@ -250,7 +250,7 @@ nnoremap <silent><F8> :TagbarToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " <F9> format Markdown
-"autocmd FileType markdown nnoremap <silent><F9> :AsyncRun -save=1 -post=checktime -silent chmod o+w $(VIM_FILEPATH) && docker run --rm -v $(VIM_FILEDIR):/work tmknom/prettier --write --parser=markdown $(VIM_FILENAME) && chmod o-w $(VIM_FILEPATH) <CR>
+autocmd FileType markdown nnoremap <silent><F9> :Prettier<CR>
 
 " <F10> format verilog
 " autocmd FileType verilog_systemverilog nnoremap <silent><F10> :AsyncRun -save=1 -post=checktime -silent istyle $(VIM_FILEPATH) && rm $(VIM_FILEPATH).orig <CR>
