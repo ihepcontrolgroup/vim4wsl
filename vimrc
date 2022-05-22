@@ -57,10 +57,6 @@ nnoremap <C-H> O<Esc>
 
 "swich window
 nnoremap <silent> tt :ChooseWin<cr>
-nnoremap <Up> <C-w>k
-nnoremap <Down> <C-w>j
-nnoremap <Left> <C-w>h
-nnoremap <Right> <C-w>l
 
 "回车快速搜索
 nnoremap <CR> gd
