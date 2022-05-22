@@ -402,6 +402,9 @@ endfunction
 " If you have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 
+" post install (yarn install | npm install) then load plugin only for editing supported files
+Plug 'prettier/vim-prettier', {'do': 'yarn install --frozen-lockfile --production', 'for': 'markdown'}
+
 " lastplace
 Plug 'farmergreg/vim-lastplace'
 " undotree
