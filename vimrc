@@ -714,7 +714,7 @@ let g:mkdp_port = '8080'
 
 " preview page title
 " ${name} will be replace with the file name
-let g:mkdp_page_title = '「${name}」'
+let g:mkdp_page_title = 'previewMarkdown-${name}'
 
 " recognized filetypes
 " these filetypes will have MarkdownPreview... commands
