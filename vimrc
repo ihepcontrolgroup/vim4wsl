@@ -315,8 +315,8 @@ Plug 'ekalinin/Dockerfile.vim'
 " code format
 Plug 'rhysd/vim-clang-format',{ 'on': 'ClangFormat', 'for' : [ 'c', 'cpp' ] }
 " quickly move
-Plug 'unblevable/quick-scope'
 Plug 'psliwka/vim-smoothie'
+Plug 'easymotion/vim-easymotion'
 " git state
 Plug 'airblade/vim-gitgutter'
 " starup interface
@@ -384,22 +384,6 @@ function! BuildComposer(info)
         endif
     endif
 endfunction
-" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') , 'for': ['markdown'] }
-" Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
-" filetype plugin on
-" "Uncomment to override defaults:
-" let g:instant_markdown_slow = 0
-" let g:instant_markdown_autostart = 0
-" let g:instant_markdown_open_to_the_world = 1
-" let g:instant_markdown_allow_unsafe_content = 1
-" let g:instant_markdown_allow_external_content = 0
-" let g:instant_markdown_mathjax = 1
-" let g:instant_markdown_mermaid = 1
-" let g:instant_markdown_logfile = '$HOME/tmp/instant_markdown.log'
-" let g:instant_markdown_autoscroll = 1
-" let g:instant_markdown_port = 8080
-" let g:instant_markdown_python = 1
-" If you have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 
 " post install (yarn install | npm install) then load plugin only for editing supported files
@@ -422,7 +406,13 @@ Plug 'gcmt/wildfire.vim'
 " shell commands
 Plug 'skywind3000/asyncrun.vim'
 " window switch
-Plug 't9md/vim-choosewin'
+Plug 't9md/vim-choosewin', { 'on': 'ChooseWin' }
+" fast fold
+Plug 'Konfekt/FastFold'
+" match highlight
+Plug 'andymass/vim-matchup'
+" command line completion
+Plug 'gelguy/wilder.nvim'
 call plug#end()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -445,14 +435,6 @@ let g:indentLine_char     = '┊'
 let g:html_indent_inctags = "html,body,head,tbody"
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1  = "inc"
-
-" quickscope
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-augroup qs_colors
-    autocmd!
-    autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
-    autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
-augroup END
 
 " number.vim
 let g:numbers_exclude = ['tagbar', 'gundo', 'minibufexpl', 'nerdtree', 'minimap']
@@ -770,3 +752,26 @@ let g:prettier#config#require_pragma = 'false'
 " lf|crlf|cr|all
 " defaut: 'lf'
 let g:prettier#config#end_of_line = get(g:, 'prettier#config#end_of_line', 'lf')
+
+" personal snippets
+set runtimepath+=~/.vim/UltiSnips
+
+" easy-motion
+map f <Plug>(easymotion-prefix)
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
+map fl <Plug>(easymotion-lineforward)
+map fh <Plug>(easymotion-linebackward)
+map f. <Plug>(easymotion-repeat)
+
+" wilder
+call wilder#setup({'modes': [':', '/', '?']})
+call wilder#set_option('renderer', wilder#popupmenu_renderer({
+      \ 'highlighter': wilder#basic_highlighter(),
+      \ 'left': [
+      \   ' ', wilder#popupmenu_devicons(),
+      \ ],
+      \ 'right': [
+      \   ' ', wilder#popupmenu_scrollbar(),
+      \ ],
+      \ }))
