@@ -59,7 +59,7 @@ nnoremap <C-H> O<Esc>
 nnoremap <silent> tt :ChooseWin<cr>
 
 "回车快速搜索
-nnoremap <CR> gd
+" nnoremap <CR> gd
 
 "n和N固定搜索位置
 nnoremap <expr> n  'Nn'[v:searchforward]
@@ -89,11 +89,17 @@ nnoremap ; $a;<ESC>
 " visual: Ctrl+c copy the selected area; normal: Ctrl+c copy a line
 " defaut to use system clipboard
 " set clipboard=unnamedplus
-nnoremap <C-c> "+Y
-vnoremap <C-c> "+y
+" nnoremap <C-c> "+Y
+" vnoremap <C-c> "+y
 
-" prevent vim from clearing the clipboard on exit
-autocmd VimLeave * call system("xclip -selection clipboard -i", getreg('+'))
+" WSL yank support
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+endif
 
 " 行列线设置
 set cul
@@ -354,10 +360,15 @@ Plug 'preservim/tagbar',{ 'on': 'TagbarToggle' }
 Plug 'RRethy/vimss-illuminate'
 " generate tags(ctags,global) automatically
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/gutentags_plus'
 " snippets
 Plug 'SirVer/ultisnips'
 " code completion
 Plug 'jayli/vim-easycomplete'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
 " text objects
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-function'
@@ -489,9 +500,9 @@ let g:airline_theme = 'tomorrow'
 " let g:ale_linters_explicit =1
 let g:ale_sign_column_always         = 1
 let g:ale_set_highlights             = 0
-let g:ale_sign_warning               = ''
+let g:ale_sign_warning               = ''
 let g:ale_lint_on_enter              = 1
-let g:ale_sign_error                 = ''
+let g:ale_sign_error                 = ''
 let g:airline#extensions#ale#enabled = 1
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
@@ -520,14 +531,26 @@ let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 " 如果使用 universal ctags 需要增加下面一行，老的 Exuberant-ctags 不能加下一行
 let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 " 增加cscope使用的快捷键(C-[和esc按键一致，可以直接esc+s进行查找)
-nnoremap <C-[>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-nnoremap <C-[>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-nnoremap <C-[>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-nnoremap <C-[>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-nnoremap <C-[>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-nnoremap <C-[>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-nnoremap <C-[>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
-nnoremap <C-[>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <C-[>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <C-[>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <C-[>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <C-[>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <C-[>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <C-[>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+" nnoremap <C-[>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
+" nnoremap <C-[>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+let g:gutentags_plus_nomap = 1
+let g:gutentags_plus_switch = 1
+noremap <C-[>s :GscopeFind s <C-R><C-W><cr>
+noremap <C-[>g :GscopeFind g <C-R><C-W><cr>
+noremap <C-[>c :GscopeFind c <C-R><C-W><cr>
+noremap <C-[>t :GscopeFind t <C-R><C-W><cr>
+noremap <C-[>e :GscopeFind e <C-R><C-W><cr>
+noremap <C-[>f :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>
+noremap <C-[>i :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>
+noremap <C-[>d :GscopeFind d <C-R><C-W><cr>
+noremap <C-[>a :GscopeFind a <C-R><C-W><cr>
+noremap <C-[>z :GscopeFind z <C-R><C-W><cr>
 
 " NerdTree
 let g:NERDTreeDirArrowExpandable = ''
@@ -594,7 +617,51 @@ let g:AutoPairs = {'(':')', '[':']', '{':'}', "'":"'", '"':'"', '<':'>'}
 " easycomplete
 let g:easycomplete_diagnostics_enable = 0
 let g:easycomplete_lsp_checking       = 0
-noremap gr :EasyCompleteReference<CR>
+let g:easycomplete_menu_skin = {
+        \   "buf": {
+        \      "kind":"羅",
+        \      "menu":"[B]",
+        \    },
+        \   "snip": {
+        \      "kind":"",
+        \      "menu":"[S]",
+        \    },
+        \   "dict": {
+        \      "kind":"",
+        \      "menu":"[D]",
+        \    },
+        \   "tabnine": {
+        \      "kind":"",
+        \    },
+        \ }
+  let g:easycomplete_filetypes = {"r": {
+        \ "whitelist": []
+        \ }}
+  let g:easycomplete_tabnine_config = {
+        \ 'line_limit': 800,
+        \ 'max_num_result': 5,
+        \ }
+  let g:easycomplete_lsp_type_font = {
+        \ 'class': "",     'color': "",
+        \ 'constant': "",  'constructor': "",
+        \ 'enum': "",      'enummember': "",
+        \ 'field': "料",    'file': '',
+        \ 'folder': "",    'function': "ƒ",
+        \ 'interface': "", 'keyword': "",
+        \ 'snippet': "",   'struct': "פּ",
+        \ 'text': "",      'typeparameter': "",
+        \ 'variable': "",  'module':'',
+        \ 'event': '',
+        \ 'r':'', 't':'',
+        \ 'f':'', 'c':'',
+        \ 'u':'𝘶', 'e':'𝘦',
+        \ 's':'פּ', 'v':'',
+        \ 'i':'𝘪', 'm':'',
+        \ 'p':'', 'k':'𝘬',
+        \ 'o':"𝘰", 'd':'𝘥',
+        \ 'l':"𝘭", 'a':"𝘢",
+        \ }
+
 
 " minimap
 let g:minimap_width      = 8
@@ -775,3 +842,6 @@ call wilder#set_option('renderer', wilder#popupmenu_renderer({
       \   ' ', wilder#popupmenu_scrollbar(),
       \ ],
       \ }))
+
+" choose-window
+let g:choosewin_overlay_enable = 1
